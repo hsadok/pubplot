@@ -29,8 +29,22 @@ def get_document_sizes(document_class):
 
     Examples:
         You may use one of the available document_classes.
+         >>> from pprint import pprint
          >>> from pubplot.document_classes import ieee_infocom
          >>> sizes_dict = get_document_sizes(ieee_infocom)
+         >>> pprint(sizes_dict)
+         {'Huge': 24.0,
+          'LARGE': 17.0,
+          'Large': 14.0,
+          'columnwidth': 252.0,
+          'footnotesize': 8.0,
+          'huge': 20.0,
+          'large': 12.0,
+          'normalsize': 10.0,
+          'scriptsize': 7.0,
+          'small': 9.0,
+          'textwidth': 516.0,
+          'tiny': 5.0}
 
          Or provide your own, using a dict
          >>> document_class = {
@@ -38,6 +52,19 @@ def get_document_sizes(document_class):
          ...    'document_options': ['10pt', 'conference', 'letterpaper']
          ... }
          >>> sizes_dict = get_document_sizes(document_class)
+         >>> pprint(sizes_dict)
+         {'Huge': 24.0,
+          'LARGE': 17.0,
+          'Large': 14.0,
+          'columnwidth': 252.0,
+          'footnotesize': 8.0,
+          'huge': 20.0,
+          'large': 12.0,
+          'normalsize': 10.0,
+          'scriptsize': 7.0,
+          'small': 9.0,
+          'textwidth': 516.0,
+          'tiny': 5.0}
 
     Returns:
         A dictionary containing sizes

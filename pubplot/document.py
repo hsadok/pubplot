@@ -59,33 +59,38 @@ class Document(object):
 
     Examples:
         You may use one of the available document_classes.
-         >>> from pubplot.document_classes import ieee_infocom
-         >>> doc = Document(ieee_infocom)
+        >>> from pubplot.document_classes import ieee_infocom
+        >>> doc = Document(ieee_infocom)
 
-         Or provide your own, using a dict
-         >>> document_class = {
-         ...    'documentclass': 'IEEEtran',
-         ...    'document_options': ['10pt', 'conference', 'letterpaper']
-         ... }
-         >>> doc = Document(document_class)
+        Or provide your own, using a dict
+        >>> document_class = {
+        ...    'documentclass': 'IEEEtran',
+        ...    'document_options': ['10pt', 'conference', 'letterpaper']
+        ... }
+        >>> doc = Document(document_class)
 
-         Similarly, a style can be chosen from one of the available
-         >>> from pubplot.styles import monochromatic
-         >>> doc = Document(ieee_infocom, style=monochromatic())
+        Similarly, a style can be chosen from one of the available
+        >>> from pubplot.styles import monochromatic
+        >>> doc = Document(ieee_infocom, style=monochromatic())
 
-         or personalized to your specific needs.
-         >>> style_axis_below = {
-         ...     'axes.grid': True,
-         ...     'axes.axisbelow': False,
-         ...     ':bar:axes.grid.axis': 'y'
-         ... }
-         >>> doc = Document(ieee_infocom, style=style_axis_below)
+        or personalized to your specific needs.
+        >>> style_axis_below = {
+        ...     'axes.grid': True,
+        ...     'axes.axisbelow': False,
+        ...     ':bar:axes.grid.axis': 'y'
+        ... }
+        >>> doc = Document(ieee_infocom, style=style_axis_below)
 
-         Any rcParams can be used to define the syle. But it also supports
-         plot-specific styles. In the example above the option
-         ``':bar:axes.grid.axis': 'y'`` applies only to bar plots. You may
-         prepend ``:<plot_style>:`` to any option in order to apply it only to
-         the specific plot style (e.g, bar).
+        Any rcParam can be used to define the style. But it also supports
+        plot-specific styles. In the example above the option
+        ``':bar:axes.grid.axis': 'y'`` applies only to bar plots. You may
+        prepend ``:<plot_style>:`` to any option in order to apply it only to
+        the specific plot type (e.g, bar).
+
+        Once you have a document, you can obtain any LaTeX font size related to
+        the ``document_class`` you specified, e.g.,
+        >>> doc.normalsize
+        10.0
 
     """
 
