@@ -7,7 +7,7 @@ with open('README.rst') as readme_file:
 setup(
     name='pubplot',
     version='0.1',
-    description='Generate plots to use in a LaTeX publication using matplotlib',
+    description='Seamless LaTeX and Matplotlib integration for publication plots',
     long_description=readme,
     packages=find_packages(),
     url='',
@@ -21,11 +21,19 @@ setup(
         'matplotlib',
         'pylatex'
     ],
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
     classifiers=[
         'Development Status :: 4 - Beta',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Scientific/Engineering :: Visualization',
     ],
 )
