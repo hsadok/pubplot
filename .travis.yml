@@ -29,6 +29,7 @@ addons:
     packages:
       - texlive-base
       - texlive-latex-recommended
+      - texlive-fonts-recommended
       - texlive-publishers
 
 # command to install dependencies
