@@ -153,15 +153,7 @@ def get_document_sizes(document_class):
                'mollis volutpat odio. Mauris euismod mi nec rutrum tempor.\n'
                * 20)
     doc.append(NoEscape(r'\getsizes'))
-    import subprocess
-    try:
-        doc.generate_pdf(temp_doc_name, silent=False)
-    except subprocess.CalledProcessError as e:
-        raise RuntimeError(
-            "command '{}' return with error (code {}): {}".format(e.cmd,
-                                                                  e.returncode,
-                                                                  e.output))
-    # doc.generate_pdf(temp_doc_name, silent=False)
+    doc.generate_pdf(temp_doc_name)
     os.remove(temp_doc_name + '.pdf')
 
     with open(sizes_file, 'r') as f:
