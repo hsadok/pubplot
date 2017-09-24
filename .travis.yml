@@ -26,7 +26,10 @@ matrix:
 addons:
   apt:
     packages:
+      - texlive-base
+      - texlive-latex-recommended
       - texlive-latex-extra
+      - texlive-fonts-recommended
 
 # command to install dependencies
 install:
