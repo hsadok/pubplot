@@ -6,10 +6,10 @@ python:
   - "2.7"
   - "3.4"
   - "3.5"
-  - "3.5-dev" # 3.5 development branch
+  - "3.5-dev"
   - "3.6"
-  - "3.6-dev" # 3.6 development branch
-  - "3.7-dev" # 3.7 development branch
+  - "3.6-dev"
+  - "3.7-dev"
   - "nightly"
   - "pypy"
   - "pypy3"
@@ -32,9 +32,13 @@ addons:
       - texlive-fonts-recommended
       - texlive-publishers
 
-# command to install dependencies
 install:
   - pip install -r requirements.txt
-# command to run tests
+
 script:
   - python setup.py test
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
