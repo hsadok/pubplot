@@ -3,42 +3,44 @@ dist: trusty
 language: python
 cache: pip
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.5-dev"
-  - "3.6"
-  - "3.6-dev"
-  - "3.7-dev"
-  - "nightly"
-  - "pypy"
-  - "pypy3"
-
+- '2.7'
+- '3.4'
+- '3.5'
+- 3.5-dev
+- '3.6'
+- 3.6-dev
+- 3.7-dev
+- nightly
+- pypy
+- pypy3
 matrix:
   fast_finish: true
   allow_failures:
-    - python: '3.5-dev'
-    - python: '3.6-dev'
-    - python: '3.7-dev'
-    - python: 'nightly'
-    - python: 'pypy'
-    - python: 'pypy3'
-
+  - python: 3.5-dev
+  - python: 3.6-dev
+  - python: 3.7-dev
+  - python: nightly
+  - python: pypy
+  - python: pypy3
 addons:
   apt:
     packages:
-      - texlive-base
-      - texlive-latex-recommended
-      - texlive-fonts-recommended
-      - texlive-publishers
-
+    - texlive-base
+    - texlive-latex-recommended
+    - texlive-fonts-recommended
+    - texlive-publishers
 install:
-  - pip install -r requirements.txt
-
+- pip install -r requirements.txt
 script:
-  - python setup.py test
-
+- python setup.py test
 notifications:
   email:
     on_success: change
     on_failure: always
+deploy:
+  provider: pypi
+  user: sadok
+  password:
+    secure: iUFKFXrQ8od/8bQZDo2laGvOnUn+w6Lh7fHFb52e27GMyqUoMAk8ftqc+Ye8zt3lTbqk2crc4wFwlEpDNTJ2aZqt2VWaBBH1UDxxQy4HKPjz5zTxaQ8zKLTmf2W4mUdVeE0vIKNGSkhCoNqPuNfvqrEc5VBSBLOrPic9TfSqJMAe++ojairX2jFIdxUZVWJyGjg57+Lyzc8DDPqdEot4CdqxL9EJiwRgmbYb6GIOUDNFLnpDZ5ACq8qAWqBSV4DfWMC48vU9pqDBeDzdLXx6D6NfFvWasCsdXdSNCqLPFlN6n5XlOxRZqm4xBkp+3AV8g9uy/M+yb//S5sHGmp/AFF2djhdjuRg9QLhYj3HnSS6RW4KmDBdEV6AYehlq4AI5tw6cG7yYjgCHxvWBcYbjpX7jczYq5q7L6XJub2B15/+ed22/OLvDuMxb++7ezE7q+NPs5f1mJyZupvtnyDN4YCMay7yPsPGiP04ZOmJxOTrxN8fucchUy8QClW4HJqy2BQxfZNcbXHdGkpmOcNsFmBwylTQtV9XpYmV8yDiDta06EXge92ah4wCNQh5GOMj2hYlE+5UP3oAh/0JJa2NurFTjxo+91mApUkE4NoLboUO93pEERn43scd3S3xgh0boVDXOkpM8Xc/9vaoFB2RVcgsj5ayyIY1oxXZwrXhAD3g=
+  on:
+    tags: true
