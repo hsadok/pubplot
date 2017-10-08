@@ -48,6 +48,9 @@ def dichromatic(color1='r', color2='k'):
         'patch.edgecolor': 'black',
         'patch.force_edgecolor': True,
         'patch.linewidth': 0.5,
+
+        # font
+        'font.family': 'sans-serif'
     }
 
 

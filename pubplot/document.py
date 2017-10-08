@@ -85,7 +85,7 @@ class Document(object):
         plot-specific styles. In the example above the option
         ``':bar:axes.grid.axis': 'y'`` applies only to bar plots. You may
         prepend ``:<plot_style>:`` to any option in order to apply it only to
-        the specific plot type (e.g, bar).
+        the specific plot type (e.g., bar).
 
         Once you have a document, you can obtain any LaTeX font size related to
         the ``document_class`` you specified, e.g.,
@@ -104,7 +104,7 @@ class Document(object):
             'text.usetex': True,
 
             # fonts (empty lists inherit from document)
-            'font.family': 'serif',  # 'sans-serif',
+            'font.family': 'serif',
             'font.serif': [],
             'font.sans-serif': [],
             'font.monospace': [],
@@ -204,7 +204,8 @@ class Document(object):
             fig = PubFigure(fig, self.style)
 
             axes = []
-            for i in xrange(1, nrows*ncols+1):
+            # range is bad in py2.7 however we expect this to be short
+            for i in range(1, nrows*ncols+1):
                 def lazy_ax(nrows=nrows, ncols=ncols, i=i):
                     return fig.add_subplot(nrows, ncols, i)
                 ax = PubAxes(lazy_ax, self.style)
