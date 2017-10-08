@@ -26,7 +26,8 @@ Now you can use your newly created ``doc`` to make plots that fit well in an
 
 This will create two files ``plot_name.pdf`` and ``plot_name.pgf``.
 
-.. image:: images/example1.png
+.. image:: images/example1-short.png
+    :align: center
     :alt: plot in a LaTeX document
 
 If you are familiar with matplotlib you will have no problem using pubplot.
