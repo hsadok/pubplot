@@ -12,7 +12,7 @@ setup(
     packages=find_packages(),
     url='',
     download_url='',
-    license='GPLv3',
+    license='ISC',
     author='Hugo Sadok',
     author_email='hugo@sadok.com.br',
     keywords=['matplotlib', 'latex', 'pgf'],
