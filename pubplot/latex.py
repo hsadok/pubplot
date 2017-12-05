@@ -138,9 +138,15 @@ def get_document_sizes(document_class):
     \makeatother
     """
     temp_doc_name = next(tempfile._get_candidate_names())
+    
+    if 'packages' in document_class:
+        packages = document_class['packages']
+        del document_class['packages']
+    else:
+        packages = []
 
     doc = Document(temp_doc_name, **document_class)
-    doc.packages = []
+    doc.packages = packages
     doc.preamble.append(NoEscape(size_command))
     doc.append(Command('title', 'Title'))
     doc.append(Command('maketitle'))
