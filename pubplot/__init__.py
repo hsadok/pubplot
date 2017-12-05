@@ -20,4 +20,4 @@ from pubplot.document import Document
 
 __author__ = 'Hugo Sadok'
 __email__ = 'hugo@sadok.com.br'
-__version__ = '0.1'
+__version__ = '0.1.1'
