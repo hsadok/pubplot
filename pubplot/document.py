@@ -160,7 +160,7 @@ class Document(object):
             width: figure width in pt, defaults to columnwidth.
             height: figure height in pt and, by default, it is adjusted
                     automatically based on the width.
-            scale: overall figure scale, adjusts both weight and height.
+            scale: overall figure scale, adjusts both width and height.
             xscale: multiply width by xscale, leaving height intact.
             yscale: multiply height by yscale, leaving width intact.
 
@@ -181,7 +181,7 @@ class Document(object):
             width: figure width in pt, defaults to columnwidth.
             height: figure height in pt and, by default, it is adjusted
                     automatically based on nrows, ncols and width.
-            scale: overall figure scale, adjusts both weight and height.
+            scale: overall figure scale, adjusts both width and height.
             xscale: multiply width by xscale, leaving height intact.
             yscale: multiply height by yscale, leaving width intact.
 
