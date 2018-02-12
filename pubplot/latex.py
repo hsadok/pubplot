@@ -25,7 +25,9 @@ def get_document_sizes(document_class):
     """Get useful document sizes given a LaTeX document class.
 
     Args:
-        document_class: dict with ``documentclass`` and ``document_options``.
+        document_class: dict with ``documentclass`` and ``document_options``. It
+            may optionally contain a list of LaTeX packages under ``packages``
+            as well as any other argument acceptable by ``pylatex.document``.
 
     Examples:
         You may use one of the available document_classes.

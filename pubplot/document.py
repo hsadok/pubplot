@@ -39,7 +39,9 @@ class Document(object):
     uses the dichromatic style from ``pubplot.styles``.
 
     Args:
-        document_class: dict with ``documentclass`` and ``document_options``.
+        document_class: dict with ``documentclass`` and ``document_options``. It
+            may optionally contain a list of LaTeX packages under ``packages``
+            as well as any other argument acceptable by ``pylatex.document``.
         style: dict following matplotlib rcParams convention.
 
     Attributes:
