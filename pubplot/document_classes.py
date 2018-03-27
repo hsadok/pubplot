@@ -16,6 +16,8 @@
 #
 # document_classes.py
 
+from pylatex import Package, NoEscape
+
 ieee_infocom = {
     'documentclass': 'IEEEtran',
     'document_options': ['10pt', 'conference', 'letterpaper']
@@ -54,4 +56,17 @@ ieee_jrnl_transmag = {
 acm_sigconf = {
     'documentclass': 'acmart',
     'document_options': 'sigconf'
+}
+
+usenix = {
+    'documentclass': 'article',
+    'document_options': ['letterpaper','twocolumn','10pt'],
+    'packages': [Package(NoEscape('usenix'))],
+}
+
+sbc = {
+    'documentclass': 'article',
+    'document_options': ['12pt'],
+    'packages': [Package(NoEscape('sbc-template'))],
+    'data': [NoEscape(r'\address{a}')]
 }
