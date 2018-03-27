@@ -6,7 +6,7 @@ with open('README.rst') as readme_file:
 
 setup(
     name='pubplot',
-    version='0.1.1',
+    version='0.1.2',
     description='Seamless LaTeX and Matplotlib integration for publication plots',
     long_description=readme,
     packages=find_packages(),
@@ -19,7 +19,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'matplotlib',
-        'pylatex'
+        'pylatex',
+        'numpy'
     ],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
