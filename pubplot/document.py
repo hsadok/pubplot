@@ -123,10 +123,8 @@ class Document(object):
                 r"\usepackage[T1]{fontenc}",
             ]
         }
-        if style is None:
-            style = dichromatic()  # using dichromatic by default
-
-        self.style.update(style)
+        if style is not None:
+            self.style.update(style)
 
     def update_style(self, new_style):
         """Updates the current document style.

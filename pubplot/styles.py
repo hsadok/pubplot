@@ -16,6 +16,8 @@
 #
 # styles.py
 
+import matplotlib as mpl
+import numpy as np
 from matplotlib import cycler
 
 
@@ -66,3 +68,38 @@ def monochromatic(color='k'):
         dict: rcParams dict with the appropriate style
     """
     return dichromatic(color, color)
+
+
+def qualitative(markers=True):
+    cmap = mpl.cm.get_cmap('Set2')
+    bins = np.linspace(0, 1, 8)
+    palette = list(map(tuple, cmap(bins)[:, :3]))
+
+    prop_cycle = cycler('color', palette)
+
+    if markers:
+        prop_cycle += cycler('marker', ['.', '^', 'x', 'v', 'D', '*', '>', '+'])
+
+    return {
+        # line styles
+        'axes.prop_cycle': prop_cycle,
+
+        # grid
+        'grid.color': '0.3',
+        'grid.linestyle': ':',
+        'grid.linewidth': 0.5,
+        'axes.grid': True,
+        'axes.axisbelow': True,
+        ':bar:axes.grid.axis': 'y',
+
+        # patch edges
+        'patch.edgecolor': 'black',
+        'patch.force_edgecolor': True,
+        'patch.linewidth': 0.5,
+
+        # font
+        'font.family': 'sans-serif'
+    }
+    
+def mpl_default():
+    return {}
