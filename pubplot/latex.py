@@ -19,6 +19,8 @@
 import os
 from pylatex import Document, NoEscape, Command
 import tempfile
+import subprocess
+import glob
 
 
 def get_document_sizes(document_class):
@@ -161,8 +163,12 @@ def get_document_sizes(document_class):
                'mollis volutpat odio. Mauris euismod mi nec rutrum tempor.\n'
                * 20)
     doc.append(NoEscape(r'\getsizes'))
-    doc.generate_pdf(temp_doc_name)
-    os.remove(temp_doc_name + '.pdf')
+    
+    try:
+        doc.generate_pdf(temp_doc_name)
+    except subprocess.CalledProcessError:
+        pass
+    list(map(os.remove, glob.glob(temp_doc_name + '.*')))
 
     with open(sizes_file, 'r') as f:
         lines = f.read().splitlines()
