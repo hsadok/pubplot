@@ -6,7 +6,7 @@ with open('README.rst') as readme_file:
 
 setup(
     name='pubplot',
-    version='0.1.1',
+    version='0.1.4',
     description='Seamless LaTeX and Matplotlib integration for publication plots',
     long_description=readme,
     packages=find_packages(),
