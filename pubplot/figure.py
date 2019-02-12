@@ -21,6 +21,7 @@ import warnings
 import matplotlib as mpl
 from matplotlib.backends.backend_pgf import FigureCanvasPgf
 
+from pubplot.axes import PubAxes
 from pubplot.helpers import RCParamWrapper
 
 
@@ -42,6 +43,14 @@ class PubFigure(RCParamWrapper):
         super(PubFigure, self).__init__(fig, rc)
         self.fig = fig
 
+    def add_gridspec(self, nrows, ncols, **kwargs):
+        return self.fig.add_gridspec(nrows, ncols, **kwargs)
+
+    def add_subplot(self, *args, **kwargs):
+        with mpl.rc_context(rc=self.rc.get_rc_to_function('')):
+            ax = self.fig.add_subplot(*args, **kwargs)
+            return PubAxes(lambda: ax, self.rc)
+
     def save(self, name, pdf=True, pgf=True):
         """Save figure to pgf and pdf.
 
@@ -57,7 +66,8 @@ class PubFigure(RCParamWrapper):
             canvas = FigureCanvasPgf(self.fig)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
+                kw = {'bbox_inches': 'tight', 'pad_inches': 0}
                 if pgf:
-                    canvas.print_figure(name + '.pgf', bbox_inches='tight')
+                    canvas.print_figure(name + '.pgf', **kw)
                 if pdf:
-                    canvas.print_figure(name + '.pdf', bbox_inches='tight')
+                    canvas.print_figure(name + '.pdf', **kw)

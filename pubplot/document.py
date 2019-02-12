@@ -133,6 +133,18 @@ class Document(object):
                     style.setdefault(k, style['font.size'])
             self.style.update(style)
 
+        # document_class['packages'] is natively sent to pylatex, but we also
+        # need matplotlib to be aware of them.
+        preamble = self.style['pgf.preamble']
+        for p in document_class.get('packages', []):
+            if isinstance(p, str):
+                preamble.append(r"\usepackage{{{}}}".format(p))
+            elif hasattr(p, 'dumps'):
+                # pylatex package object
+                preamble.append(p.dumps())
+            else:
+                raise NotImplementedError(p)
+
     def update_style(self, new_style):
         """Updates the current document style.
 
@@ -172,11 +184,27 @@ class Document(object):
             yscale: multiply height by yscale, leaving width intact.
 
         Returns:
-            fig, axes: a Figure and a single axes.
+            fig: a Figure object.
         """
-        fig, axes = self.subfigures(1, 1, width=width, height=height,
-                                    scale=scale, xscale=xscale, yscale=yscale)
-        return fig, axes[0]
+        if width is None:
+            width = self.columnwidth
+
+        if height is None:
+            height = width / golden_ratio
+
+        width = width * inches_per_pt * xscale * scale
+        height = height * inches_per_pt * yscale * scale
+        figsize = [width, height]
+
+        plain_rc_params = RCParams(self.style).get_rc_to_function('')
+        with mpl.rc_context(rc=plain_rc_params):
+            fig = Figure(figsize=figsize, frameon=False,
+                    tight_layout={'pad': 0,
+                        'w_pad': mpl.rcParams['figure.subplot.wspace'],
+                        'h_pad': mpl.rcParams['figure.subplot.hspace'],
+                        })
+            fig = PubFigure(fig, self.style)
+        return fig
 
     def subfigures(self, nrows, ncols, width=None, height=None, scale=1,
                    xscale=1, yscale=1):
@@ -195,27 +223,17 @@ class Document(object):
         Returns:
             fig, axes: a Figure and a list of axes.
         """
-        if width is None:
-            width = self.columnwidth
-
         if height is None:
-            height = width / golden_ratio * nrows / ncols
-
-        width = width * inches_per_pt * xscale * scale
-        height = height * inches_per_pt * yscale * scale
-        figsize = [width, height]
-
-        plain_rc_params = RCParams(self.style).get_rc_to_function('')
-        with mpl.rc_context(rc=plain_rc_params):
-            fig = Figure(figsize=figsize, frameon=False, tight_layout=True)
-            fig = PubFigure(fig, self.style)
-
-            axes = []
-            # range is bad in py2.7 however we expect this to be short
-            for i in range(1, nrows*ncols+1):
-                def lazy_ax(nrows=nrows, ncols=ncols, i=i):
-                    return fig.add_subplot(nrows, ncols, i)
-                ax = PubAxes(lazy_ax, self.style)
-                axes.append(ax)
+            # Auto-determine figure height; scale it by the number of subplots
+            # by default.
+            yscale *= nrows / ncols
+        fig = self.figure(width, height, scale, xscale, yscale)
+        axes = []
+        # range is bad in py2.7 however we expect this to be short
+        for i in range(1, nrows*ncols+1):
+            def lazy_ax(nrows=nrows, ncols=ncols, i=i):
+                return fig.add_subplot(nrows, ncols, i)
+            ax = PubAxes(lazy_ax, self.style)
+            axes.append(ax)
 
         return fig, axes
