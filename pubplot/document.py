@@ -107,6 +107,7 @@ class Document(object):
         self.style = {
             'pgf.texsystem': 'pdflatex',
             'text.usetex': True,
+            'figure.dpi': 600,  # recommended DPI for journal prints
 
             # fonts (empty lists inherit from document)
             'font.family': 'serif',
