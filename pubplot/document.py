@@ -96,6 +96,9 @@ class Document(object):
 
     """
 
+    FONT_OVERRIDES = ['font.size', 'axes.labelsize', 'legend.fontsize',
+            'xtick.labelsize', 'ytick.labelsize']
+
     def __init__(self, document_class, style=None):
         sizes = get_document_sizes(document_class)
         self.__dict__.update(sizes)
@@ -124,6 +127,10 @@ class Document(object):
             ]
         }
         if style is not None:
+            style = style.copy()
+            if 'font.size' in style:
+                for k in self.FONT_OVERRIDES:
+                    style.setdefault(k, style['font.size'])
             self.style.update(style)
 
     def update_style(self, new_style):
