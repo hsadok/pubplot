@@ -127,11 +127,7 @@ class Document(object):
             ]
         }
         if style is not None:
-            style = style.copy()
-            if 'font.size' in style:
-                for k in self.FONT_OVERRIDES:
-                    style.setdefault(k, style['font.size'])
-            self.style.update(style)
+            self.update_style(style)
 
         # document_class['packages'] is natively sent to pylatex, but we also
         # need matplotlib to be aware of them.
@@ -144,6 +140,32 @@ class Document(object):
                 preamble.append(p.dumps())
             else:
                 raise NotImplementedError(p)
+
+    def temporary_style(self, new_style):
+        """Returns a context manager which updates the current document style
+        on enter and reverts the style on exit.
+
+        Examples:
+            >>> import pubplot as pplt
+            >>> doc = pplt.Document(pplt.document_classes.ieee_jrnl)
+            >>> with doc.temporary_style({'font.size': 6}):
+                    # All font sizes now 6
+                    fig, ax = doc.subfigures(1, 1)
+                    ax[0].plot([1, 2, 3], [1, 2, 3])
+                    fig.save('test')
+            >>> # Font sizes now reverted
+            >>> fig, ax = doc.subfigures(1, 1)
+            >>> ax.plot([1, 2, 3], [1, 2, 3])
+            >>> fig.save('test2')
+        """
+        class _DocumentStyleSetter:
+            def __enter__(self_inner):
+                self_inner.old_style = self.style.copy()
+                self.update_style(new_style)
+                return self
+            def __exit__(self_inner, exc_type, exc_value, exc_tb):
+                self.style = self_inner.old_style
+        return _DocumentStyleSetter()
 
     def update_style(self, new_style):
         """Updates the current document style.
@@ -170,7 +192,11 @@ class Document(object):
             new_style: a dict with rcParams. If the option is not specified in
             the new dict it remains with the old value.
         """
-        self.style.update(new_style)
+        style = new_style.copy()
+        if 'font.size' in style:
+            for k in self.FONT_OVERRIDES:
+                style.setdefault(k, style['font.size'])
+        self.style.update(style)
 
     def figure(self, width=None, height=None, scale=1, xscale=1, yscale=1):
         """Creates a new figure with a single plot.
