@@ -17,6 +17,7 @@
 # __init__.py
 
 from pubplot.document import Document
+import pubplot.document_classes
 
 __author__ = 'Hugo Sadok'
 __email__ = 'hugo@sadok.com.br'
