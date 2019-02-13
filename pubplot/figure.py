@@ -43,13 +43,10 @@ class PubFigure(RCParamWrapper):
         super(PubFigure, self).__init__(fig, rc)
         self.fig = fig
 
-    def add_gridspec(self, nrows, ncols, **kwargs):
-        return self.fig.add_gridspec(nrows, ncols, **kwargs)
-
     def add_subplot(self, *args, **kwargs):
         with mpl.rc_context(rc=self.rc.get_rc_to_function('')):
             ax = self.fig.add_subplot(*args, **kwargs)
-            return PubAxes(lambda: ax, self.rc)
+            return PubAxes(ax, self.rc)
 
     def save(self, name, pdf=True, pgf=True):
         """Save figure to pgf and pdf.

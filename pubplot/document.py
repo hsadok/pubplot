@@ -147,16 +147,18 @@ class Document(object):
         on enter and reverts the style on exit.
 
         Examples:
-            >>> import pubplot as pplt
-            >>> doc = pplt.Document(pplt.document_classes.ieee_jrnl)
-            >>> with doc.temporary_style({'font.size': 6}):
-                    # All font sizes now 6
-                    fig, ax = doc.subfigures(1, 1)
-                    ax[0].plot([1, 2, 3], [1, 2, 3])
-                    fig.save('test')
+            >>> import pubplot  # doctest: +ELLIPSIS
+            >>> pplt = pubplot.Document(pubplot.document_classes.ieee_jrnl)
+            >>> with pplt.temporary_style({'font.size': 6}):
+            ...     # All font sizes now 6
+            ...     fig, ax = pplt.subfigures()
+            ...     ax.plot([1, 2, 3], [1, 2, 3])
+            ...     fig.save('test')
+            [...]
             >>> # Font sizes now reverted
-            >>> fig, ax = doc.subfigures(1, 1)
+            >>> fig, ax = pplt.subfigures()
             >>> ax.plot([1, 2, 3], [1, 2, 3])
+            [...]
             >>> fig.save('test2')
         """
         class _DocumentStyleSetter:
@@ -233,8 +235,8 @@ class Document(object):
             fig = PubFigure(fig, self.style)
         return fig
 
-    def subfigures(self, nrows, ncols, width=None, height=None, scale=1,
-                   xscale=1, yscale=1):
+    def subfigures(self, nrows=1, ncols=1, width=None, height=None, scale=1,
+                   xscale=1, yscale=1, squeeze=True):
         """Creates a new figure with multiple plots.
 
         Args:
@@ -246,9 +248,13 @@ class Document(object):
             scale: overall figure scale, adjusts both width and height.
             xscale: multiply width by xscale, leaving height intact.
             yscale: multiply height by yscale, leaving width intact.
+            squeeze: If True (default) and nrows == 1 and ncols == 1, return
+                    a single axis object rather than a list of axes.
+
 
         Returns:
-            fig, axes: a Figure and a list of axes.
+            fig, axes: a Figure and a list of axes, or, if squeeze == True,
+                    a Figure and an axis object.
         """
         if height is None:
             # Auto-determine figure height; scale it by the number of subplots
@@ -263,4 +269,8 @@ class Document(object):
             ax = PubAxes(lazy_ax, self.style)
             axes.append(ax)
 
+        if squeeze and len(axes) == 1:
+            # Squeeze - special case for nrows == ncols == 1
+            axes = axes[0]
         return fig, axes
+
