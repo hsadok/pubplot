@@ -43,7 +43,7 @@ Ubuntu/Debian
 Make sure you have an updated LaTeX installation::
 
     sudo apt update
-    sudo apt install texlive-base texlive-latex-recommended texlive-fonts-recommended texlive-publishers
+    sudo apt install texlive-base texlive-latex-recommended texlive-fonts-recommended texlive-publishers texlive-latex-extra
 
 Now install ``pubplot`` using ``pip``::
 
