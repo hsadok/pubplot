@@ -116,11 +116,11 @@ class Document(object):
             'font.monospace': [],
 
             # sizes
-            'font.size': self.small,
-            'axes.labelsize': self.small,
-            'legend.fontsize': self.footnotesize,
-            'xtick.labelsize': self.small,
-            'ytick.labelsize': self.small,
+            'font.size': self.caption,
+            'axes.labelsize': self.caption,
+            'legend.fontsize': self.caption,
+            'xtick.labelsize': self.caption,
+            'ytick.labelsize': self.caption,
 
             "pgf.preamble": [
                 r"\usepackage[utf8x]{inputenc}",

@@ -17,11 +17,14 @@
 # latex.py
 
 import os
-from pylatex import Document, NoEscape, Command
+from pylatex import Document, NoEscape, Command, Package
 import tempfile
 import subprocess
 import glob
 
+LATEX_BUILT_IN_SIZES = ['tiny', 'scriptsize', 'footnotesize', 'small',
+                        'normalsize', 'large', 'Large', 'LARGE', 'huge', 'Huge']
+LOG_PATTERN = '<<<>>>'
 
 def get_document_sizes(document_class):
     """Get useful document sizes given a LaTeX document class.
@@ -40,6 +43,7 @@ def get_document_sizes(document_class):
          {'Huge': 24.0,
           'LARGE': 17.0,
           'Large': 14.0,
+          'caption': 8.0,
           'columnwidth': 252.0,
           'footnotesize': 8.0,
           'huge': 20.0,
@@ -60,6 +64,7 @@ def get_document_sizes(document_class):
          {'Huge': 24.0,
           'LARGE': 17.0,
           'Large': 14.0,
+          'caption': 8.0,
           'columnwidth': 252.0,
           'footnotesize': 8.0,
           'huge': 20.0,
@@ -84,63 +89,38 @@ def get_document_sizes(document_class):
         - LARGE
         - huge
         - Huge
+        - caption
     """
-    sizes_file = next(tempfile._get_candidate_names()) + '.txt'
-    size_command = r"""
-    \newwrite\sizesfile
-    
+
+    def log_with_name(name, value):
+        return '\\wlog{{{}{}={}}}'.format(LOG_PATTERN, name, value)
+
+    def log_text_size(text_size_name):
+        return '\\{} a {} \n\n'.format(text_size_name,
+            log_with_name(text_size_name, r'\f@size pt'))
+
+    get_sizes_command = r"""
     \makeatletter
     \newcommand\getsizes{%
-        \openout\sizesfile=""" + sizes_file + r"""
+        """ + log_with_name('columnwidth', r'\the\columnwidth') + r"""
+        """ + log_with_name('textwidth', r'\the\textwidth') + r"""
 
-        \write\sizesfile{columnwidth=\the\columnwidth}%
+        \begin{figure}
+            \centering
+            \fbox{
+                \begin{minipage}[c][0.1\textheight][c]{\columnwidth}
+                \centering{Dummy Image}
+                \end{minipage}
+            }
+            \caption{a """ + log_with_name('caption', r'\f@size pt') + r""" }
+        \end{figure}
 
-        \write\sizesfile{textwidth=\the\textwidth}%
-
-        \newlength{\textsizetiny}
-        \tiny a \setlength{\textsizetiny}{\f@size pt}
-        \write\sizesfile{tiny=\the\textsizetiny}%
-
-        \newlength{\textsizescript}
-        \scriptsize a \setlength{\textsizescript}{\f@size pt}
-        \write\sizesfile{scriptsize=\the\textsizescript}%
-
-        \newlength{\textsizefoot}
-        \footnotesize a \setlength{\textsizefoot}{\f@size pt}
-        \write\sizesfile{footnotesize=\the\textsizefoot}%
-
-        \newlength{\textsizesmall}
-        \small a \setlength{\textsizesmall}{\f@size pt}
-        \write\sizesfile{small=\the\textsizesmall}%
-
-        \newlength{\textsizenormal}
-        \normalsize a \setlength{\textsizenormal}{\f@size pt}
-        \write\sizesfile{normalsize=\the\textsizenormal}%
-
-        \newlength{\textsizelarge}
-        \large a \setlength{\textsizelarge}{\f@size pt}
-        \write\sizesfile{large=\the\textsizelarge}%
-
-        \newlength{\textsizeLarge}
-        \Large a \setlength{\textsizeLarge}{\f@size pt}
-        \write\sizesfile{Large=\the\textsizeLarge}%
-
-        \newlength{\textsizeLARGE}
-        \LARGE a \setlength{\textsizeLARGE}{\f@size pt}
-        \write\sizesfile{LARGE=\the\textsizeLARGE}%
-
-        \newlength{\textsizehuge}
-        \huge a \setlength{\textsizehuge}{\f@size pt}
-        \write\sizesfile{huge=\the\textsizehuge}%
-
-        \newlength{\textsizeHuge}
-        \Huge a \setlength{\textsizeHuge}{\f@size pt}
-        \write\sizesfile{Huge=\the\textsizeHuge}%
-
-        \closeout\sizesfile
-    }
-    \makeatother
     """
+    for size in LATEX_BUILT_IN_SIZES:
+        get_sizes_command += log_text_size(size)
+
+    get_sizes_command += '}'
+
     temp_doc_name = next(tempfile._get_candidate_names())
 
     document_kwargs = document_class.copy()
@@ -148,7 +128,7 @@ def get_document_sizes(document_class):
 
     doc = Document(temp_doc_name, **document_kwargs)
     doc.packages = packages
-    doc.preamble.append(NoEscape(size_command))
+    doc.preamble.append(NoEscape(get_sizes_command))
     doc.append(Command('title', 'Title'))
     doc.append(Command('maketitle'))
     doc.append('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam c'
@@ -162,19 +142,20 @@ def get_document_sizes(document_class):
     doc.append(NoEscape(r'\getsizes'))
     
     try:
-        doc.generate_pdf(temp_doc_name)
+        doc.generate_pdf(temp_doc_name, clean=False)
     except subprocess.CalledProcessError:
         pass
-    list(map(os.remove, glob.glob(temp_doc_name + '.*')))
 
-    with open(sizes_file, 'r') as f:
+    with open(temp_doc_name + '.log', 'r') as f:
         lines = f.read().splitlines()
 
     sizes_dict = {}
     for l in lines:
-        variable, value = l.split('=')
-        sizes_dict[variable] = float(value[0:-2])
+        if l.startswith(LOG_PATTERN):
+            variable, value = l.split('=')
+            variable = variable[len(LOG_PATTERN):]
+            sizes_dict[variable] = float(value[0:-2])
 
-    os.remove(sizes_file)
+    list(map(os.remove, glob.glob(temp_doc_name + '.*')))
 
     return sizes_dict
