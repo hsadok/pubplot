@@ -29,7 +29,7 @@ def single_plot():
 
 def fill_subplot_axes(axes, label=False):
     for ax in axes:
-        ax.bar(range(11), [-i for i in xrange(11)])
+        ax.bar(range(11), [-i for i in range(11)])
         if label:
             ax.set_xlabel('lalala')
             ax.set_ylabel('lalala')
