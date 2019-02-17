@@ -1,3 +1,18 @@
+# Project-specific
+# Ignore output from running examples
+/examples/*.pdf
+/examples/*.pgf
+
+# doctest files
+/*.aux
+/*.fdb_latexmk
+/*.fls
+/*.pdf
+/*.pgf
+/*.tex
+/*.txt
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

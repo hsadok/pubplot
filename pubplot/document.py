@@ -96,6 +96,9 @@ class Document(object):
 
     """
 
+    FONT_OVERRIDES = ['font.size', 'axes.labelsize', 'legend.fontsize',
+            'xtick.labelsize', 'ytick.labelsize']
+
     def __init__(self, document_class, style=None):
         sizes = get_document_sizes(document_class)
         self.__dict__.update(sizes)
@@ -104,6 +107,7 @@ class Document(object):
         self.style = {
             'pgf.texsystem': 'pdflatex',
             'text.usetex': True,
+            'figure.dpi': 600,  # recommended DPI for journal prints
 
             # fonts (empty lists inherit from document)
             'font.family': 'serif',
@@ -124,7 +128,47 @@ class Document(object):
             ]
         }
         if style is not None:
-            self.style.update(style)
+            self.update_style(style)
+
+        # document_class['packages'] is natively sent to pylatex, but we also
+        # need matplotlib to be aware of them.
+        preamble = self.style['pgf.preamble']
+        for p in document_class.get('packages', []):
+            if isinstance(p, str):
+                preamble.append(r"\usepackage{{{}}}".format(p))
+            elif hasattr(p, 'dumps'):
+                # pylatex package object
+                preamble.append(p.dumps())
+            else:
+                raise NotImplementedError(p)
+
+    def temporary_style(self, new_style):
+        """Returns a context manager which updates the current document style
+        on enter and reverts the style on exit.
+
+        Examples:
+            >>> import pubplot  # doctest: +ELLIPSIS
+            >>> pplt = pubplot.Document(pubplot.document_classes.ieee_jrnl)
+            >>> with pplt.temporary_style({'font.size': 6}):
+            ...     # All font sizes now 6
+            ...     fig, ax = pplt.subfigures()
+            ...     ax.plot([1, 2, 3], [1, 2, 3])
+            ...     fig.save('test')
+            [...]
+            >>> # Font sizes now reverted
+            >>> fig, ax = pplt.subfigures()
+            >>> ax.plot([1, 2, 3], [1, 2, 3])
+            [...]
+            >>> fig.save('test2')
+        """
+        class _DocumentStyleSetter:
+            def __enter__(self_inner):
+                self_inner.old_style = self.style.copy()
+                self.update_style(new_style)
+                return self
+            def __exit__(self_inner, exc_type, exc_value, exc_tb):
+                self.style = self_inner.old_style
+        return _DocumentStyleSetter()
 
     def update_style(self, new_style):
         """Updates the current document style.
@@ -151,7 +195,11 @@ class Document(object):
             new_style: a dict with rcParams. If the option is not specified in
             the new dict it remains with the old value.
         """
-        self.style.update(new_style)
+        style = new_style.copy()
+        if 'font.size' in style:
+            for k in self.FONT_OVERRIDES:
+                style.setdefault(k, style['font.size'])
+        self.style.update(style)
 
     def figure(self, width=None, height=None, scale=1, xscale=1, yscale=1):
         """Creates a new figure with a single plot.
@@ -165,14 +213,30 @@ class Document(object):
             yscale: multiply height by yscale, leaving width intact.
 
         Returns:
-            fig, axes: a Figure and a single axes.
+            fig: a Figure object.
         """
-        fig, axes = self.subfigures(1, 1, width=width, height=height,
-                                    scale=scale, xscale=xscale, yscale=yscale)
-        return fig, axes[0]
+        if width is None:
+            width = self.columnwidth
 
-    def subfigures(self, nrows, ncols, width=None, height=None, scale=1,
-                   xscale=1, yscale=1):
+        if height is None:
+            height = width / golden_ratio
+
+        width = width * inches_per_pt * xscale * scale
+        height = height * inches_per_pt * yscale * scale
+        figsize = [width, height]
+
+        plain_rc_params = RCParams(self.style).get_rc_to_function('')
+        with mpl.rc_context(rc=plain_rc_params):
+            fig = Figure(figsize=figsize, frameon=False,
+                    tight_layout={'pad': 0,
+                        'w_pad': mpl.rcParams['figure.subplot.wspace'],
+                        'h_pad': mpl.rcParams['figure.subplot.hspace'],
+                        })
+            fig = PubFigure(fig, self.style)
+        return fig
+
+    def subfigures(self, nrows=1, ncols=1, width=None, height=None, scale=1,
+                   xscale=1, yscale=1, squeeze=True):
         """Creates a new figure with multiple plots.
 
         Args:
@@ -184,31 +248,29 @@ class Document(object):
             scale: overall figure scale, adjusts both width and height.
             xscale: multiply width by xscale, leaving height intact.
             yscale: multiply height by yscale, leaving width intact.
+            squeeze: If True (default) and nrows == 1 and ncols == 1, return
+                    a single axis object rather than a list of axes.
+
 
         Returns:
-            fig, axes: a Figure and a list of axes.
+            fig, axes: a Figure and a list of axes, or, if squeeze == True,
+                    a Figure and an axis object.
         """
-        if width is None:
-            width = self.columnwidth
-
         if height is None:
-            height = width / golden_ratio * nrows / ncols
+            # Auto-determine figure height; scale it by the number of subplots
+            # by default.
+            yscale *= nrows / ncols
+        fig = self.figure(width, height, scale, xscale, yscale)
+        axes = []
+        # range is bad in py2.7 however we expect this to be short
+        for i in range(1, nrows*ncols+1):
+            def lazy_ax(nrows=nrows, ncols=ncols, i=i):
+                return fig.add_subplot(nrows, ncols, i)
+            ax = PubAxes(lazy_ax, self.style)
+            axes.append(ax)
 
-        width = width * inches_per_pt * xscale * scale
-        height = height * inches_per_pt * yscale * scale
-        figsize = [width, height]
-
-        plain_rc_params = RCParams(self.style).get_rc_to_function('')
-        with mpl.rc_context(rc=plain_rc_params):
-            fig = Figure(figsize=figsize, frameon=False, tight_layout=True)
-            fig = PubFigure(fig, self.style)
-
-            axes = []
-            # range is bad in py2.7 however we expect this to be short
-            for i in range(1, nrows*ncols+1):
-                def lazy_ax(nrows=nrows, ncols=ncols, i=i):
-                    return fig.add_subplot(nrows, ncols, i)
-                ax = PubAxes(lazy_ax, self.style)
-                axes.append(ax)
-
+        if squeeze and len(axes) == 1:
+            # Squeeze - special case for nrows == ncols == 1
+            axes = axes[0]
         return fig, axes
+

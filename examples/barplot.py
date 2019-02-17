@@ -22,7 +22,7 @@ from pubplot.document_classes import acm_sigconf
 
 def single_plot():
     style = Document(acm_sigconf)
-    fig, ax = style.figure()
+    fig, ax = style.subfigures()
     ax.bar(range(11), range(11))
     fig.save('single_barplot')
 

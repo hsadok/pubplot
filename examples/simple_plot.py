@@ -23,7 +23,7 @@ from pubplot.styles import monochromatic
 
 def single_plot():
     doc = Document(ieee_infocom)
-    fig, ax = doc.figure()
+    fig, ax = doc.subfigures()
     ax.plot(range(11), range(11))
     fig.save('single_plot')
 
@@ -31,10 +31,10 @@ def single_plot():
 def fill_subplot_axes(axes, label=False):
     for i, ax in enumerate(axes):
         if i % 3:
-            for j in xrange(1,5):
-                ax.plot(range(11), [j*i for i in xrange(11)])
+            for j in range(1,5):
+                ax.plot(range(11), [j*i for i in range(11)])
         else:
-            ax.bar(range(11), [i for i in xrange(11)])
+            ax.bar(range(11), [i for i in range(11)])
         if label:
             ax.set_xlabel('lorem')
             ax.set_ylabel('ipsum')
