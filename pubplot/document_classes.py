@@ -20,37 +20,44 @@ from pylatex import Package, NoEscape
 
 ieee_infocom = {
     'documentclass': 'IEEEtran',
-    'document_options': ['10pt', 'conference', 'letterpaper']
+    'document_options': ['10pt', 'conference', 'letterpaper'],
+    'packages': [Package(NoEscape('times'))],
 }
 
 ieee_conf = {
     'documentclass': 'IEEEtran',
-    'document_options': ['conference']
+    'document_options': ['conference'],
+    'packages': [Package(NoEscape('times'))],
 }
 
 ieee_conf_compsoc = {
     'documentclass': 'IEEEtran',
-    'document_options': ['conference', 'compsoc']
+    'document_options': ['conference', 'compsoc'],
+    'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl = {
     'documentclass': 'IEEEtran',
-    'document_options': ['journal']
+    'document_options': ['journal'],
+    'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl_compsoc = {
     'documentclass': 'IEEEtran',
-    'document_options': ['10pt', 'journal', 'compsoc']
+    'document_options': ['10pt', 'journal', 'compsoc'],
+    'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl_comsoc = {
     'documentclass': 'IEEEtran',
-    'document_options': ['journal', 'comsoc']
+    'document_options': ['journal', 'comsoc'],
+    'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl_transmag = {
     'documentclass': 'IEEEtran',
-    'document_options': ['journal', 'transmag']
+    'document_options': ['journal', 'transmag'],
+    'packages': [Package(NoEscape('times'))],
 }
 
 acm_sigconf = {

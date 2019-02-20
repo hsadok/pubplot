@@ -11,7 +11,7 @@ setup(
     long_description=readme,
     packages=find_packages(),
     url='',
-    download_url='',
+    download_url='https://github.com/hugombarreto/pubplot',
     license='ISC',
     author='Hugo Sadok',
     author_email='hugo@sadok.com.br',
@@ -19,7 +19,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'matplotlib',
-        'pylatex'
+        'pylatex',
+        'numpy'
     ],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],

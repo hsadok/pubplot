@@ -22,14 +22,14 @@ from pubplot.document_classes import acm_sigconf
 
 def single_plot():
     style = Document(acm_sigconf)
-    fig, ax = style.figure()
+    fig, ax = style.subfigures()
     ax.bar(range(11), range(11))
     fig.save('single_barplot')
 
 
 def fill_subplot_axes(axes, label=False):
     for ax in axes:
-        ax.bar(range(11), [-i for i in xrange(11)])
+        ax.bar(range(11), [-i for i in range(11)])
         if label:
             ax.set_xlabel('lalala')
             ax.set_ylabel('lalala')
