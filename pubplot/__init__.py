@@ -21,4 +21,4 @@ import pubplot.document_classes
 
 __author__ = 'Hugo Sadok'
 __email__ = 'hugo@sadok.com.br'
-__version__ = '0.1.4'
+__version__ = '0.2.0'
