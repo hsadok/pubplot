@@ -60,7 +60,7 @@ Then, include the image using the following line (usually inside a figure enviro
 
     \input{plot_name.pgf}
 
-.. image:: https://raw.githubusercontent.com/hsadok/pubplot/master/images/example1-short.png
+.. image:: https://raw.githubusercontent.com/hsadok/pubplot/master/docs/images/example1-short.png
     :align: center
     :alt: plot in a LaTeX document
 
