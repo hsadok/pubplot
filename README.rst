@@ -65,8 +65,8 @@ Then, include the image using the following line (usually inside a figure enviro
     :alt: plot in a LaTeX document
 
 If you are familiar with matplotlib you will have no problem using pubplot. In 
-the example above, ``fig`` should support all methods from matplotlib's Figure
-class. The same is true for `ax`, which works like `Axes`.
+the example above, ``fig`` should support all methods from matplotlib's Figure
+class. The same is true for ``ax``, which works like ``Axes``.
 
 For further help, check the examples_ and `the rest of the documentation`_.
 
