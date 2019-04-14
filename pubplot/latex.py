@@ -36,6 +36,7 @@ def get_document_sizes(document_class):
 
     Examples:
         You may use one of the available document_classes.
+
          >>> from pprint import pprint
          >>> from pubplot.document_classes import ieee_infocom
          >>> sizes_dict = get_document_sizes(ieee_infocom)
@@ -55,6 +56,7 @@ def get_document_sizes(document_class):
           'tiny': 5.0}
 
          Or provide your own, using a dict
+
          >>> document_class = {
          ...    'documentclass': 'IEEEtran',
          ...    'document_options': ['10pt', 'conference', 'letterpaper']
@@ -77,6 +79,7 @@ def get_document_sizes(document_class):
 
     Returns:
         A dictionary containing sizes
+
         - columnwidth
         - textwidth
         - tiny

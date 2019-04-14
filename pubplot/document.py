@@ -61,10 +61,12 @@ class Document(object):
 
     Examples:
         You may use one of the available document_classes.
+
         >>> from pubplot.document_classes import ieee_infocom
         >>> doc = Document(ieee_infocom)
 
         Or provide your own, using a dict
+
         >>> document_class = {
         ...    'documentclass': 'IEEEtran',
         ...    'document_options': ['10pt', 'conference', 'letterpaper']
@@ -72,10 +74,12 @@ class Document(object):
         >>> doc = Document(document_class)
 
         Similarly, a style can be chosen from one of the available
+
         >>> from pubplot.styles import monochromatic
         >>> doc = Document(ieee_infocom, style=monochromatic())
 
         or personalized to your specific needs.
+
         >>> style_axis_below = {
         ...     'axes.grid': True,
         ...     'axes.axisbelow': False,
@@ -91,6 +95,7 @@ class Document(object):
 
         Once you have a document, you can obtain any LaTeX font size related to
         the ``document_class`` you specified, e.g.,
+        
         >>> doc.normalsize
         10.0
 
@@ -179,6 +184,7 @@ class Document(object):
 
         Examples:
             An example, updating sizes
+
             >>> from pubplot.document_classes import ieee_infocom
             >>> doc = Document(ieee_infocom)
             >>>
@@ -193,7 +199,7 @@ class Document(object):
 
         Args:
             new_style: a dict with rcParams. If the option is not specified in
-            the new dict it remains with the old value.
+                       the new dict it remains with the old value.
         """
         style = new_style.copy()
         if 'font.size' in style:
