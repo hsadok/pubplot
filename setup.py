@@ -11,7 +11,7 @@ setup(
     long_description=readme,
     packages=find_packages(),
     url='',
-    download_url='https://github.com/hugombarreto/pubplot',
+    download_url='https://github.com/hsadok/pubplot',
     license='ISC',
     author='Hugo Sadok',
     author_email='hugo@sadok.com.br',

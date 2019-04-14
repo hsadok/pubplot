@@ -2,8 +2,8 @@
 pubplot
 =======
 
-.. image:: https://travis-ci.com/hugombarreto/pubplot.svg?token=WbvxSoxYCEXuq2yHcffB&branch=master
-    :target: https://travis-ci.com/hugombarreto/pubplot
+.. image:: https://travis-ci.com/hsadok/pubplot.svg?token=WbvxSoxYCEXuq2yHcffB&branch=master
+    :target: https://travis-ci.com/hsadok/pubplot
 
 **pubplot** makes easy to create publication quality plots that fit elegantly
 in your LaTeX document.
