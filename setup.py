@@ -6,7 +6,7 @@ with open('README.rst') as readme_file:
 
 setup(
     name='pubplot',
-    version='0.2.0',
+    version='0.2.2',
     description='Seamless LaTeX and Matplotlib integration for publication plots',
     long_description=readme,
     packages=find_packages(),
@@ -30,11 +30,11 @@ setup(
         'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Scientific/Engineering :: Visualization',
     ],
 )
