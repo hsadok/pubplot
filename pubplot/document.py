@@ -127,10 +127,10 @@ class Document(object):
             'xtick.labelsize': self.caption,
             'ytick.labelsize': self.caption,
 
-            "pgf.preamble": [
+            "pgf.preamble": "\n".join([
                 r"\usepackage[utf8x]{inputenc}",
                 r"\usepackage[T1]{fontenc}",
-            ]
+            ])
         }
         if style is not None:
             self.update_style(style)
@@ -140,12 +140,13 @@ class Document(object):
         preamble = self.style['pgf.preamble']
         for p in document_class.get('packages', []):
             if isinstance(p, str):
-                preamble.append(r"\usepackage{{{}}}".format(p))
+                preamble += r"\n\usepackage{{{}}}".format(p)
             elif hasattr(p, 'dumps'):
                 # pylatex package object
-                preamble.append(p.dumps())
+                preamble += r"\n{}".format(p.dumps())
             else:
                 raise NotImplementedError(p)
+        self.style['pgf.preamble'] = preamble
 
     def temporary_style(self, new_style):
         """Returns a context manager which updates the current document style
