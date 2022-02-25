@@ -140,10 +140,10 @@ class Document(object):
         preamble = self.style['pgf.preamble']
         for p in document_class.get('packages', []):
             if isinstance(p, str):
-                preamble += r"\n\usepackage{{{}}}".format(p)
+                preamble += "\n" + r"\usepackage{{{}}}".format(p)
             elif hasattr(p, 'dumps'):
                 # pylatex package object
-                preamble += r"\n{}".format(p.dumps())
+                preamble += "\n" + r"{}".format(p.dumps())
             else:
                 raise NotImplementedError(p)
         self.style['pgf.preamble'] = preamble
