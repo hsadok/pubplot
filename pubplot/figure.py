@@ -48,7 +48,7 @@ class PubFigure(RCParamWrapper):
             ax = self.fig.add_subplot(*args, **kwargs)
             return PubAxes(ax, self.rc)
 
-    def save(self, name, pdf=True, pgf=True):
+    def save(self, name, pdf=True, pgf=True, bbox_inches='tight', pad_inches=0):
         """Save figure to pgf and pdf.
 
         By default it saves the figure in both pdf and pgf, but this behavior
@@ -63,7 +63,7 @@ class PubFigure(RCParamWrapper):
             canvas = FigureCanvasPgf(self.fig)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                kw = {'bbox_inches': 'tight', 'pad_inches': 0}
+                kw = {'bbox_inches': bbox_inches, 'pad_inches': pad_inches}
                 if pgf:
                     canvas.print_figure(name + '.pgf', **kw)
                 if pdf:
