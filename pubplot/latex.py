@@ -16,15 +16,64 @@
 #
 # latex.py
 
-import os
-from pylatex import Document, NoEscape, Command, Package
-import tempfile
-import subprocess
 import glob
+import json
+import os
+import subprocess
+import tempfile
+
+from pylatex import Command, Document, NoEscape, Package
+
+from pubplot.document_classes import all_document_sizes
 
 LATEX_BUILT_IN_SIZES = ['tiny', 'scriptsize', 'footnotesize', 'small',
                         'normalsize', 'large', 'Large', 'LARGE', 'huge', 'Huge']
 LOG_PATTERN = '<<<>>>'
+
+_cache_path = os.path.join(os.path.dirname(__file__), "doc_sizes_cache.json")
+_cached_document_sizes = dict()
+_cache_up_to_date = False
+
+
+def _check_latex_installation():
+    r"""
+    Ideally this should be part of pylatex
+    """
+
+    from distutils.spawn import find_executable
+
+    compilers = ('pdflatex', 'latexmk')
+    for compiler in compilers:
+        if find_executable(compiler):
+            return True
+
+    return False
+
+
+def _build_update_doc_size_cache():
+    r"""
+    Requires latex installation
+    The idea is that we use this function to populate the cache
+    and ship the cache with the pubplot repository
+    """
+    temp_sizes = dict()
+    for doc_class in all_document_sizes:
+        temp_sizes[doc_class['sty_name']] = get_document_sizes(doc_class)
+
+    f = open(_cache_path, 'w')
+    json.dump(temp_sizes, f, indent=4)
+    f.close()
+
+
+def _read_doc_size_cache(force=False):
+    global _cache_up_to_date
+    if(os.path.exists(_cache_path) and (not _cache_up_to_date or force)):
+        f = open(_cache_path, 'r')
+        _cached_document_sizes.update(json.load(f))
+        f.close()
+        _cache_up_to_date = True
+    return _cache_up_to_date == True
+
 
 def get_document_sizes(document_class):
     """Get useful document sizes given a LaTeX document class.
@@ -95,6 +144,11 @@ def get_document_sizes(document_class):
         - caption
     """
 
+    if(not _check_latex_installation()):
+        if(_read_doc_size_cache()):
+            if(document_class['sty_name'] in _cached_document_sizes):
+                return _cached_document_sizes[document_class['sty_name']]
+
     def log_with_name(name, value):
         return '\\wlog{{{}{}={}}}'.format(LOG_PATTERN, name, value)
 
@@ -162,3 +216,7 @@ def get_document_sizes(document_class):
     list(map(os.remove, glob.glob(temp_doc_name + '.*')))
 
     return sizes_dict
+
+
+if(__name__ == "__main__"):
+    _build_update_doc_size_cache()

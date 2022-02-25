@@ -19,61 +19,80 @@
 from pylatex import Package, NoEscape
 
 ieee_infocom = {
+    'sty_name': 'ieee_infocom',
     'documentclass': 'IEEEtran',
     'document_options': ['10pt', 'conference', 'letterpaper'],
     'packages': [Package(NoEscape('times'))],
 }
 
 ieee_conf = {
+    'sty_name': 'ieee_conf',
     'documentclass': 'IEEEtran',
     'document_options': ['conference'],
     'packages': [Package(NoEscape('times'))],
 }
 
 ieee_conf_compsoc = {
+    'sty_name': 'ieee_conf_compsoc',
     'documentclass': 'IEEEtran',
     'document_options': ['conference', 'compsoc'],
     'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl = {
+    'sty_name': 'ieee_jrnl',
     'documentclass': 'IEEEtran',
     'document_options': ['journal'],
     'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl_compsoc = {
+    'sty_name': 'ieee_jrnl_compsoc',
     'documentclass': 'IEEEtran',
     'document_options': ['10pt', 'journal', 'compsoc'],
     'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl_comsoc = {
+    'sty_name': 'ieee_jrnl_comsoc',
     'documentclass': 'IEEEtran',
     'document_options': ['journal', 'comsoc'],
     'packages': [Package(NoEscape('times'))],
 }
 
 ieee_jrnl_transmag = {
+    'sty_name': 'ieee_jrnl_transmag',
     'documentclass': 'IEEEtran',
     'document_options': ['journal', 'transmag'],
     'packages': [Package(NoEscape('times'))],
 }
 
 acm_sigconf = {
+    'sty_name': 'acm_sigconf',
     'documentclass': 'acmart',
     'document_options': 'sigconf'
 }
 
 usenix = {
+    'sty_name': 'usenix',
     'documentclass': 'article',
     'document_options': ['letterpaper','twocolumn','10pt'],
     'packages': [Package(NoEscape('usenix'))],
 }
 
 sbc = {
+    'sty_name': 'sbc',
     'documentclass': 'article',
     'document_options': ['12pt'],
     'packages': [Package(NoEscape('sbc-template'))],
     'data': [NoEscape(r'\address{a}')]
 }
+
+article = {
+    'sty_name': 'article'
+}
+
+all_document_sizes = [
+    ieee_infocom, ieee_conf, ieee_conf_compsoc, ieee_jrnl, ieee_jrnl_compsoc,
+    ieee_jrnl_comsoc, ieee_jrnl_transmag, acm_sigconf, usenix, sbc, article
+]

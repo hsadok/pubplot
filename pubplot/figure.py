@@ -23,6 +23,7 @@ from matplotlib.backends.backend_pgf import FigureCanvasPgf
 
 from pubplot.axes import PubAxes
 from pubplot.helpers import RCParamWrapper
+from pubplot.latex import _check_latex_installation
 
 
 class PubFigure(RCParamWrapper):
