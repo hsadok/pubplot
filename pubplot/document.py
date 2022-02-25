@@ -127,8 +127,10 @@ class Document(object):
             'xtick.labelsize': self.caption,
             'ytick.labelsize': self.caption,
 
+            # Use utf8 instead of utf8x
+            # https://tex.stackexchange.com/questions/13067/utf8x-vs-utf8-inputenc
             "pgf.preamble": "\n".join([
-                r"\usepackage[utf8x]{inputenc}",
+                r"\usepackage[utf8]{inputenc}",
                 r"\usepackage[T1]{fontenc}",
             ])
         }
