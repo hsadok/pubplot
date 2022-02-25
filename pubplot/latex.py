@@ -38,6 +38,7 @@ _cache_up_to_date = False
 def _check_latex_installation():
     r"""
     Ideally this should be part of pylatex
+    returns True if latex is found
     """
 
     from distutils.spawn import find_executable

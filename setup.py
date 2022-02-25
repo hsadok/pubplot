@@ -17,6 +17,9 @@ setup(
     author_email='hugo@sadok.com.br',
     keywords=['matplotlib', 'latex', 'pgf'],
     include_package_data=True,
+    package_data= {
+        '': ['*.json']
+    },
     install_requires=[
         'matplotlib',
         'pylatex',
