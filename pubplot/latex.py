@@ -181,6 +181,7 @@ def get_document_sizes(document_class):
     temp_doc_name = next(tempfile._get_candidate_names())
 
     document_kwargs = document_class.copy()
+    sty_name = document_kwargs.pop('sty_name', 'article')
     packages = document_kwargs.pop('packages', [])
 
     doc = Document(temp_doc_name, **document_kwargs)
