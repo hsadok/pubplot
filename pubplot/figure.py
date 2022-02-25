@@ -49,7 +49,7 @@ class PubFigure(RCParamWrapper):
             ax = self.fig.add_subplot(*args, **kwargs)
             return PubAxes(ax, self.rc)
 
-    def save(self, name, pdf=True, pgf=True, bbox_inches='tight', pad_inches=0):
+    def save(self, name, pdf=True, pgf=True, svg=True, bbox_inches='tight', pad_inches=0):
         """Save figure to pgf and pdf.
 
         By default it saves the figure in both pdf and pgf, but this behavior
@@ -60,12 +60,22 @@ class PubFigure(RCParamWrapper):
             pdf: if True saves figure in pdf format
             pgf: if True saves figure in pgf format
         """
+        kw = {'bbox_inches': bbox_inches, 'pad_inches': pad_inches}
         with mpl.rc_context(rc=self.rc.get_rc_to_function('save')):
-            canvas = FigureCanvasPgf(self.fig)
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                kw = {'bbox_inches': bbox_inches, 'pad_inches': pad_inches}
-                if pgf:
-                    canvas.print_figure(name + '.pgf', **kw)
-                if pdf:
-                    canvas.print_figure(name + '.pdf', **kw)
+            if(_check_latex_installation()):
+                canvas = FigureCanvasPgf(self.fig)
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    if pgf:
+                        canvas.print_figure(name + '.pgf', **kw)
+                    if pdf:
+                        canvas.print_figure(name + '.pdf', **kw)
+                    if svg:
+                        canvas.print_figure(name + '.svg', **kw)
+            else:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    if(pdf):
+                        self.fig.savefig(name + '.pdf', **kw)
+                    if(svg):
+                        self.fig.savefig(name + '.svg', **kw)
