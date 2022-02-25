@@ -24,7 +24,7 @@ from matplotlib.figure import Figure
 from pubplot.axes import PubAxes
 from pubplot.figure import PubFigure
 from pubplot.helpers import RCParams
-from pubplot.latex import get_document_sizes
+from pubplot.latex import get_document_sizes, _check_latex_installation
 from pubplot.styles import dichromatic
 
 inches_per_pt = 1.0 / 72.27
@@ -110,8 +110,6 @@ class Document(object):
 
         # check https://matplotlib.org/users/customizing.html for some options
         self.style = {
-            'pgf.texsystem': 'pdflatex',
-            'text.usetex': True,
             'figure.dpi': 600,  # recommended DPI for journal prints
 
             # fonts (empty lists inherit from document)
@@ -126,29 +124,37 @@ class Document(object):
             'legend.fontsize': self.caption,
             'xtick.labelsize': self.caption,
             'ytick.labelsize': self.caption,
-
-            # Use utf8 instead of utf8x
-            # https://tex.stackexchange.com/questions/13067/utf8x-vs-utf8-inputenc
-            "pgf.preamble": "\n".join([
-                r"\usepackage[utf8]{inputenc}",
-                r"\usepackage[T1]{fontenc}",
-            ])
         }
+
+        if(_check_latex_installation()):
+            # Only use tex if latex is installed
+            self.style.update({
+                'pgf.texsystem': 'pdflatex',
+                'text.usetex': True,
+                # Use utf8 instead of utf8x
+                # https://tex.stackexchange.com/questions/13067/utf8x-vs-utf8-inputenc
+                "pgf.preamble": "\n".join([
+                    r"\usepackage[utf8]{inputenc}",
+                    r"\usepackage[T1]{fontenc}",
+                ])
+            })
+
         if style is not None:
             self.update_style(style)
 
-        # document_class['packages'] is natively sent to pylatex, but we also
-        # need matplotlib to be aware of them.
-        preamble = self.style['pgf.preamble']
-        for p in document_class.get('packages', []):
-            if isinstance(p, str):
-                preamble += "\n" + r"\usepackage{{{}}}".format(p)
-            elif hasattr(p, 'dumps'):
-                # pylatex package object
-                preamble += "\n" + r"{}".format(p.dumps())
-            else:
-                raise NotImplementedError(p)
-        self.style['pgf.preamble'] = preamble
+        if(_check_latex_installation()):
+            # document_class['packages'] is natively sent to pylatex, but we also
+            # need matplotlib to be aware of them.
+            preamble = self.style['pgf.preamble']
+            for p in document_class.get('packages', []):
+                if isinstance(p, str):
+                    preamble += "\n" + r"\usepackage{{{}}}".format(p)
+                elif hasattr(p, 'dumps'):
+                    # pylatex package object
+                    preamble += "\n" + r"{}".format(p.dumps())
+                else:
+                    raise NotImplementedError(p)
+            self.style['pgf.preamble'] = preamble
 
     def temporary_style(self, new_style):
         """Returns a context manager which updates the current document style
